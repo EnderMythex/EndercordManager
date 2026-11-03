@@ -1,56 +1,57 @@
 name: Release
 
 on:
-    workflow_dispatch:
     push:
-        branches:
-            - main
-            - dev
+        branches: [main]
+        paths-ignore: ["**.md", ".github/assets/**"]
+    workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}
+    cancel-in-progress: false
+
+permissions:
+    contents: write
 
 jobs:
     release:
-        name: Release
-        permissions:
-            contents: write
         runs-on: ubuntu-latest
+        timeout-minutes: 30
+        env:
+            VERSION_NAME: 1.0.${{ github.run_number }}
         steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
+            - uses: actions/checkout@v4
 
-            - name: Setup Java
-              uses: actions/setup-java@v4
+            - uses: actions/setup-java@v4
               with:
-                  distribution: "temurin"
-                  java-version: "17"
+                  distribution: temurin
+                  java-version: 17
 
-            - name: Cache Gradle
-              uses: burrunan/gradle-cache-action@v2
+            - uses: gradle/actions/setup-gradle@v4
+
+            - name: Decode keystore
+              env:
+                  KEYSTORE: ${{ secrets.KEYSTORE }}
+              run: |
+                  if [ -n "$KEYSTORE" ]; then
+                    echo "$KEYSTORE" | base64 -d > app/keystore.jks
+                  else
+                    echo "::notice::No KEYSTORE secret, the manager is signed with a debug key."
+                  fi
 
             - name: Build
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: ./gradlew build --no-daemon
-
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "lts/*"
-                  cache: "npm"
-
-            - name: Install dependencies
-              run: npm install
-
-            - name: Setup keystore
-              run: |
-                  echo "${{ secrets.KEYSTORE }}" | base64 --decode > "app/keystore.jks"
-
-            - name: Release
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-                  KEYSTORE_ENTRY_ALIAS: ${{ secrets.KEYSTORE_ENTRY_ALIAS }}
-                  KEYSTORE_ENTRY_PASSWORD: ${{ secrets.KEYSTORE_ENTRY_PASSWORD }}
+                  KEYSTORE_ENTRY_ALIAS: ${{ secrets.KEY_ALIAS }}
+                  KEYSTORE_ENTRY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
               run: |
-                  npx semantic-release
+                  ./gradlew assembleRelease -Pversion=$VERSION_NAME --no-daemon
+                  mkdir dist
+                  cp app/build/outputs/apk/release/*.apk dist/EndercordManager.apk
+
+            - name: Publish
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  gh release create "v$VERSION_NAME" dist/EndercordManager.apk \
+                    --target "$GITHUB_SHA" --title "EnderCord Manager $VERSION_NAME" --generate-notes --latest

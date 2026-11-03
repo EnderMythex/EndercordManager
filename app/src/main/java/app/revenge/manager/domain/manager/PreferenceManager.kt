@@ -38,7 +38,7 @@ class PreferenceManager(context: Context) :
 
     var autoClearCache by booleanPreference("auto_clear_cache", true)
 
-    var theme by enumPreference("theme", Theme.SYSTEM)
+    var theme by enumPreference("theme", Theme.DARK)
 
     var channel by enumPreference("channel", DiscordVersion.Type.STABLE)
 

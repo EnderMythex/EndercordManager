@@ -25,7 +25,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -42,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import app.revenge.manager.R
 import app.revenge.manager.domain.manager.PreferenceManager
 import app.revenge.manager.domain.manager.Theme
+import app.revenge.manager.ui.theme.EnderCordDark
 import app.revenge.manager.utils.contentDescription
 import app.revenge.manager.utils.thenIf
 import kotlinx.coroutines.launch
@@ -59,7 +59,7 @@ fun ThemePicker(
     val scope = rememberCoroutineScope()
 
     val lightScheme = remember(prefs.monet) { if(prefs.monet) dynamicLightColorScheme(context) else lightColorScheme() }
-    val darkScheme = remember(prefs.monet) { if(prefs.monet) dynamicDarkColorScheme(context) else darkColorScheme() }
+    val darkScheme = remember(prefs.monet) { if(prefs.monet) dynamicDarkColorScheme(context) else EnderCordDark }
     val systemTheme = if(isSystemInDarkTheme()) darkScheme else lightScheme
 
     Column(

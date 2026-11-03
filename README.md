@@ -1,80 +1,53 @@
 <p align="center">
-  <picture>
-    <source
-      width="512px"
-      media="(prefers-color-scheme: dark)"
-      srcset="assets/wordmark/wordmark+slogan-dark.svg"
-    >
-    <img
-      width="512px"
-      src="assets/wordmark/wordmark+slogan-light.svg"
-    >
-  </picture>
-  <br>
-  <a href="https://revenge-mod.github.io/">
-       <picture>
-           <source height="32px" media="(prefers-color-scheme: dark)" srcset="assets/logo/logo-dark.svg" />
-           <img height="32px" src="assets/logo/logo-light.svg" />
-       </picture>
-   </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   <a href="https://discord.com/invite/ddcQf3s2Uq">
-       <picture>
-           <source height="32px" media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/13122796/178032563-d4e084b7-244e-4358-af50-26bde6dd4996.png" />
-           <img height="32px" src="https://user-images.githubusercontent.com/13122796/178032563-d4e084b7-244e-4358-af50-26bde6dd4996.png" />
-       </picture>
-   </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   <a href="https://github.com/revenge-mod">
-       <picture>
-           <source height="32px" media="(prefers-color-scheme: dark)" srcset="https://i.ibb.co/dMMmCrW/Git-Hub-Mark.png" />
-           <img height="32px" src="https://i.ibb.co/9wV3HGF/Git-Hub-Mark-Light.png" />
-       </picture>
-   </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-   </a>
+  <img src=".github/assets/banner.png" alt="EnderCord Manager" width="100%">
 </p>
 
-# 💊 Revenge Manager
+<p align="center">
+  <a href="https://github.com/EnderMythex/EndercordManager/releases/latest"><img src="https://img.shields.io/github/v/release/EnderMythex/EndercordManager?style=flat-square&label=release&labelColor=000&color=1c1c1e" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/Android-9%2B-1c1c1e?style=flat-square&labelColor=000" alt="Android 9+">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-OSL_3.0-1c1c1e?style=flat-square&labelColor=000" alt="License"></a>
+</p>
 
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/revenge-mod/revenge-manager/release.yml)
-![Open Software License 3](https://img.shields.io/badge/License-OSL%20v3-yellow.svg)
+<p align="center">
+  Installs <a href="https://github.com/EnderMythex/EndercordMobile"><b>EnderCord</b></a> on Android, no root needed.
+</p>
 
-Application to use Revenge on Android.
+<br>
 
-## ❓ About
+## Install
 
-Revenge Manager is an application that installs and updates [Revenge](https://github.com/revenge-mod/revenge-bundle),
-a modification for Discord.
+1. Download [**EndercordManager.apk**](https://github.com/EnderMythex/EndercordManager/releases/latest/download/EndercordManager.apk) and open it. Android asks you to allow installing apps from your browser the first time.
+2. Open EnderCord Manager and tap **Install**.
+3. It downloads Discord, adds EnderCord to it and installs it as a separate app, so the official Discord stays untouched. Log in and you're done.
 
-## 💪 Features
+To update Discord or EnderCord's loader, open the manager again and tap **Update**. EnderCord itself updates on its own every time Discord starts.
 
-Some of the features Revenge Manager provides are:
+<br>
 
-- 📲 **Install**: Download Discord and install Revenge on it
-- 🔁 **Update**: Update Revenge to the latest version
-- 🔔 **Notifications**: Be notified when a new version of Revenge is available
-- 📃 **Changelog**: See the changelog of Revenge
+## What it does
 
-## 🔽 Download
+- Downloads the latest Discord, Stable, Beta or Alpha.
+- Adds the [EnderCord loader](https://github.com/EnderMythex/EndercordMobile) to it with [LSPatch](https://github.com/LSPosed/LSPatch), which works without root.
+- Gives it its own package name (`app.endercord`) and a black icon, so it sits next to the official app.
+- Installs it normally, or through [Shizuku](https://shizuku.rikka.app) for silent installs.
+- Updates itself when a new version is released.
 
-You can download the most recent version of Revenge Manager from
-[here](https://github.com/revenge-mod/revenge-manager/releases/latest).  
-Learn how to use Revenge Manager by following the [documentation](/docs).
+<br>
 
-## 📚 Everything else
+## Build
 
-### 📙 Contributing
+You need JDK 17 and the Android SDK.
 
-Thank you for considering contributing to Revenge Manager.
-You can find the contribution guidelines [here](CONTRIBUTING.md).
+```sh
+./gradlew assembleRelease
+```
 
-### 🛠️ Building
+Every push to `main` builds the app on GitHub Actions and publishes it as a new release. To sign releases with your own key instead of a debug one, add these repository secrets: `KEYSTORE` (the `.jks` file in base64), `KEYSTORE_PASSWORD`, `KEY_ALIAS` and `KEY_PASSWORD`.
 
-To build a Revenge Manager, you can follow the [documentation](/docs).
+<br>
 
-### 📃 Documentation
+## Credits
 
-You can find the documentation of Revenge Manager [here](/docs).
+EnderCord Manager is a fork of [Revenge Manager](https://github.com/revenge-mod/revenge-manager), itself based on the Vendetta and [Aliucord](https://github.com/Aliucord/Manager) managers. Thanks to all of their contributors. Licensed under the [Open Software License 3.0](LICENSE).
 
-## 📜 Licence
-
-Revenge Manager is licensed under the OSLv3 license. Please see the [license file](LICENSE) for more information.
+Discord is a trademark of Discord Inc. EnderCord is not affiliated with or endorsed by Discord Inc. or Revenge.
