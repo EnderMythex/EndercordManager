@@ -153,7 +153,7 @@
     <string name="settings_logs_alternate_lines">Alternate lines</string>
     <string name="settings_logs_line_wrap">Wrap lines</string>
 
-    <string name="update_description">EnderCord Manager %1$s is available!</string>
+    <string name="update_description">%1$s is available!</string>
 
     <string name="channel_stable">Stable</string>
     <string name="channel_beta">Beta</string>
