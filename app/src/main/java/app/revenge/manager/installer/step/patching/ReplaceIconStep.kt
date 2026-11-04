@@ -12,6 +12,7 @@ import app.revenge.manager.installer.step.StepRunner
 import app.revenge.manager.installer.step.download.DownloadBaseStep
 import app.revenge.manager.installer.utils.ArscUtil
 import app.revenge.manager.installer.utils.ArscUtil.addColorResource
+import app.revenge.manager.installer.utils.ArscUtil.addResource
 import app.revenge.manager.installer.utils.ArscUtil.getMainArscChunk
 import app.revenge.manager.installer.utils.ArscUtil.getPackageChunk
 import app.revenge.manager.installer.utils.ArscUtil.getResourceFileName
@@ -20,10 +21,11 @@ import app.revenge.manager.utils.DiscordVersion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.inject
+import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue
 import java.util.zip.ZipFile
 
 /**
- * Replaces the existing app icons with Revenge tinted ones
+ * Replaces the existing app icons with the EnderCord ring on a black background
  */
 class ReplaceIconStep : Step() {
 
@@ -47,6 +49,18 @@ class ReplaceIconStep : Step() {
         runner.logger.i("Patching icon assets (squareIcon=$squareIconFile, roundIcon=$roundIconFile)")
 
         val backgroundColor = arsc.getPackageChunk().addColorResource("brand", Color(BuildConfig.MODDED_APP_ICON))
+
+        // The ring is added as a new drawable: a PNG file in the APK, and a resource pointing to its path
+        val foregroundPath = "res/endercord_icon.png"
+        val foregroundPathIdx = arsc.getMainArscChunk().stringPool.addString(foregroundPath, /* deduplicate = */ true)
+        val foreground = arsc.getPackageChunk().addResource(
+            typeName = "drawable",
+            resourceName = "endercord_icon",
+            configurations = { true },
+            valueType = BinaryResourceValue.Type.STRING,
+            valueData = foregroundPathIdx,
+        )
+        val foregroundBytes = context.assets.open("endercord_icon.png").use { it.readBytes() }
 
         val postfix = when (preferences.channel) {
             DiscordVersion.Type.BETA -> "beta"
@@ -74,6 +88,8 @@ class ReplaceIconStep : Step() {
                 resourcePath = rscFile,
                 referencePath = referencePath,
                 backgroundColor = backgroundColor,
+                foregroundIcon = foreground,
+                monochromeIcon = foreground,
             )
         }
 
@@ -81,6 +97,7 @@ class ReplaceIconStep : Step() {
         ZipWriter(baseApk, /* append = */ true).use {
             it.deleteEntry("resources.arsc")
             it.writeEntry("resources.arsc", arsc.toByteArray())
+            it.writeEntry(foregroundPath, foregroundBytes)
         }
     }
 
